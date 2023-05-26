@@ -16,7 +16,7 @@ class Product:
         self.product_id = product_id #le ID (produit) doit être unique pour chaque produit
         self.description = description
         self.price = price
-        self.quantity_in_stock = quantity_in_
+        self.quantity_in_stock = quantity_in_stock
 
 class Order:
     def __init__(self, order_id, order_date, client, products):
