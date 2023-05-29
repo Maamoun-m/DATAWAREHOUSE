@@ -4,71 +4,83 @@ Created on Thu May 21 10:20:29 2023
 
 @author: mekki
 """
-class Employee:
-    def __init__(self, employee_id, name, position, salary):
-        self.employee_id = employee_id #le ID doit être unique pour chaque employé
-        self.name = name
-        self.position = position # le poste occupé par l'employé 
-        self.salary = salary
+class Personne:
+    def __init__(self, personne_id, name, address, phone_number):
+        self._personne_id = personne_id
+        self._name = name
+        self._address = address
+        self._phone_number = phone_number
+    
+    def get_personne_id(self):
+        return self._personne_id
+    
+    def set_personne_id(self, personne_id):
+        self._personne_id = personne_id
+    
+    def get_name(self):
+        return self._name
+    
+    def set_name(self, name):
+        self._name = name
+    
+    def get_address(self):
+        return self._address
+    
+    def set_address(self, address):
+        self._address = address
+    
+    def get_phone_number(self):
+        return self._phone_number
+    
+    def set_phone_number(self, phone_number):
+        self._phone_number = phone_number
 
-class Product:
-    def __init__(self, product_id, description, price, quantity_in_stock):
-        self.product_id = product_id #le ID (produit) doit être unique pour chaque produit
-        self.description = description
-        self.price = price
-        self.quantity_in_stock = quantity_in_stock
-
-class Order:
-    def __init__(self, order_id, order_date, client, products):
-        self.order_id = order_id
-        self.order_date = order_date
-        self.client = client
-        self.products = products
-
-class Client:
-    def __init__(self, client_id, name, address, phone_number):
-        self.client_id = client_id
-        self.name = name
-        self.address = address
-        self.phone_number = phone_number
-
-class Warehouse:
-    def __init__(self, capacity):
-        self.capacity = capacity
-        self.products_in_stock = []
-
-    def add_product(self, product):
-        self.products_in_stock.append(product)
-
-    def remove_product(self, product):
-        self.products_in_stock.remove(product)
-
-class Sales:
-    def __init__(self, sale_date, product, quantity_sold, sale_price):
-        self.sale_date = sale_date
-        self.product = product
-        self.quantity_sold = quantity_sold
-        self.sale_price = sale_price
-
-class Supplier:
+class Supplier(Personne):
     def __init__(self, supplier_id, name, address, phone_number):
-        self.supplier_id = supplier_id
-        self.name = name
-        self.address = address
-        self.phone_number = phone_number
+        super().__init__(supplier_id, name, address, phone_number)
+        self._supplier_id = supplier_id
+    
+    def get_supplier_id(self):
+        return self._supplier_id
+    
+    def set_supplier_id(self, supplier_id):
+        self._supplier_id = supplier_id
 
-class Invoice:
-    def __init__(self, invoice_id, invoice_date, total_amount, products):
-        self.invoice_id = invoice_id
-        self.invoice_date = invoice_date
-        self.total_amount = total_amount
-        self.products = products
+class Employee(Personne):
+    def __init__(self, employee_id, name, address, phone_number, position, salary):
+        super().__init__(employee_id, name, address, phone_number)
+        self._employee_id = employee_id
+        self._position = position
+        self._salary = salary
+    
+    def get_employee_id(self):
+        return self._employee_id
+    
+    def set_employee_id(self, employee_id):
+        self._employee_id = employee_id
+    
+    def get_position(self):
+        return self._position
+    
+    def set_position(self, position):
+        self._position = position
+    
+    def get_salary(self):
+        return self._salary
+    
+    def set_salary(self, salary):
+        self._salary = salary
 
-class Report:
-    def __init__(self, report_date, sales_statistics, revenue):
-        self.report_date = report_date
-        self.sales_statistics = sales_statistics
-        self.revenue = revenue
+class Client(Personne):
+    def __init__(self, client_id, name, address, phone_number):
+        super().__init__(client_id, name, address, phone_number)
+        self._client_id = client_id
+    
+    def get_client_id(self):
+        return self._client_id
+    
+    def set_client_id(self, client_id):
+        self._client_id = client_id
 
 class Database:
     def __init__(self):
@@ -105,6 +117,183 @@ class Database:
 
     def add_report(self, report):
         self.reports.append(report)
+
+class Product:
+    def __init__(self, product_id, description, price, quantity_in_stock):
+        self._product_id = product_id
+        self._description = description
+        self._price = price
+        self._quantity_in_stock = quantity_in_stock
+    
+    def get_product_id(self):
+        return self._product_id
+    
+    def set_product_id(self, product_id):
+        self._product_id = product_id
+    
+    def get_description(self):
+        return self._description
+    
+    def set_description(self, description):
+        self._description = description
+    
+    def get_price(self):
+        return self._price
+    
+    def set_price(self, price):
+        self._price = price
+    
+    def get_quantity_in_stock(self):
+        return self._quantity_in_stock
+    
+    def set_quantity_in_stock(self, quantity_in_stock):
+        self._quantity_in_stock = quantity_in_stock
+
+class Order:
+    def __init__(self, order_id, order_date, client, products):
+        self._order_id = order_id
+        self._order_date = order_date
+        self._client = client
+        self._products = products
+    
+    def get_order_id(self):
+        return self._order_id
+    
+    def set_order_id(self, order_id):
+        self._order_id = order_id
+    
+    def get_order_date(self):
+        return self._order_date
+    
+    def set_order_date(self, order_date):
+        self._order_date = order_date
+    
+    def get_client(self):
+        return self._client
+    
+    def set_client(self, client):
+        self._client = client
+    
+    def get_products(self):
+        return self._products
+    
+    def set_products(self, products):
+        self._products = products
+
+class Warehouse:
+    def __init__(self, capacity):
+        self._capacity = capacity
+        self._products_in_stock = []
+
+    def get_capacity(self):
+        return self._capacity
+    
+    def set_capacity(self, capacity):
+        self._capacity = capacity
+    
+    def get_products_in_stock(self):
+        return self._products_in_stock
+    
+    def add_product(self, product):
+        self._products_in_stock.append(product)
+    
+    def remove_product(self, product):
+        self._products_in_stock.remove(product)
+
+
+class Sales:
+    def __init__(self, sale_date, product, quantity_sold, sale_price, client):
+        self._sale_date = sale_date
+        self._product = product
+        self._quantity_sold = quantity_sold
+        self._sale_price = sale_price
+        self._client = client
+    
+    def get_sale_date(self):
+        return self._sale_date
+    
+    def set_sale_date(self, sale_date):
+        self._sale_date = sale_date
+    
+    def get_product(self):
+        return self._product
+    
+    def set_product(self, product):
+        self._product = product
+    
+    def get_quantity_sold(self):
+        return self._quantity_sold
+    
+    def set_quantity_sold(self, quantity_sold):
+        self._quantity_sold = quantity_sold
+    
+    def get_sale_price(self):
+        return self._sale_price
+    
+    def set_sale_price(self, sale_price):
+        self._sale_price = sale_price
+    
+    def get_client(self):
+        return self._client
+    
+    def set_client(self, client):
+        self._client = client
+
+
+class Invoice:
+    def __init__(self, invoice_id, invoice_date, total_amount, products):
+        self._invoice_id = invoice_id
+        self._invoice_date = invoice_date
+        self._total_amount = total_amount
+        self._products = products
+    
+    def get_invoice_id(self):
+        return self._invoice_id
+    
+    def set_invoice_id(self, invoice_id):
+        self._invoice_id = invoice_id
+    
+    def get_invoice_date(self):
+        return self._invoice_date
+    
+    def set_invoice_date(self, invoice_date):
+        self._invoice_date = invoice_date
+    
+    def get_total_amount(self):
+        return self._total_amount
+    
+    def set_total_amount(self, total_amount):
+        self._total_amount = total_amount
+    
+    def get_products(self):
+        return self._products
+    
+    def set_products(self, products):
+        self._products = products
+
+class Report:
+    def __init__(self, report_date, sales_statistics, revenue):
+        self._report_date = report_date
+        self._sales_statistics = sales_statistics
+        self._revenue = revenue
+    
+    def get_report_date(self):
+        return self._report_date
+    
+    def set_report_date(self, report_date):
+        self._report_date = report_date
+    
+    def get_sales_statistics(self):
+        return self._sales_statistics
+    
+    def set_sales_statistics(self, sales_statistics):
+        self._sales_statistics = sales_statistics
+    
+    def get_revenue(self):
+        return self._revenue
+    
+    def set_revenue(self, revenue):
+        self._revenue = revenue
 
 
 
