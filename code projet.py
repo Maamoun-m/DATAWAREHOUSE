@@ -118,6 +118,40 @@ class Database:
     def add_report(self, report):
         self.reports.append(report)
 
+    def show_database(self):
+        print("Employees:")
+        for employee in self.employees:
+            print(employee.get_employee_id(), employee.get_name(), employee.get_position())
+        
+        print("\nProducts:")
+        for product in self.products:
+            print(product.get_product_id(), product.get_name(), product.get_price())
+        
+        print("\nOrders:")
+        for order in self.orders:
+            print(order.get_order_id(), order.get_client_id(), order.get_products(), order.get_order_date())
+        
+        print("\nClients:")
+        for client in self.clients:
+            print(client.get_client_id(), client.get_name(), client.get_address())
+        
+        print("\nSales:")
+        for sale in self.sales:
+            print(sale.get_sale_id(), sale.get_product_id(), sale.get_quantity(), sale.get_sale_date())
+        
+        print("\nSuppliers:")
+        for supplier in self.suppliers:
+            print(supplier.get_supplier_id(), supplier.get_name(), supplier.get_address())
+        
+        print("\nInvoices:")
+        for invoice in self.invoices:
+            print(invoice.get_invoice_id(), invoice.get_client_id(), invoice.get_invoice_date(), invoice.get_total_amount())
+        
+        print("\nReports:")
+        for report in self.reports:
+            print(report.get_report_id(), report.get_title(), report.get_report_date(), report.get_data())
+
+
 class Product:
     def __init__(self, product_id, description, price, quantity_in_stock):
         self._product_id = product_id
@@ -294,6 +328,41 @@ class Report:
     
     def set_revenue(self, revenue):
         self._revenue = revenue
+
+def stats(self, sales, products):
+    sales_per_client = {}
+    for sale in sales:
+        client = sale.get_client().get_client_id()
+        quantity_sold = sale.get_quantity_sold()
+        if client in sales_per_client:
+            sales_per_client[client] += quantity_sold
+        else:
+            sales_per_client[client] = quantity_sold
+    average_sales_per_client = {client: total_sales / len(sales) for client, total_sales in sales_per_client.items()}
+
+    sales_per_product = {}
+    for sale in sales:
+        product = sale.get_product().get_product_id()
+        quantity_sold = sale.get_quantity_sold()
+        if product in sales_per_product:
+            sales_per_product[product] += quantity_sold
+        else:
+            sales_per_product[product] = quantity_sold
+
+    total_revenue = sum(sale.get_sale_price() * sale.get_quantity_sold() for sale in sales)
+
+    delivery_times = [(sale.get_sale_date() - sale.get_client().get_registration_date()).days for sale in sales]
+    average_delivery_time = sum(delivery_times) / len(delivery_times)
+
+    most_demanded_product = max(sales_per_product, key=sales_per_product.get)
+
+    return {
+        "average_sales_per_client": average_sales_per_client,
+        "total_sales_per_product": sales_per_product,
+        "total_revenue": total_revenue,
+        "average_delivery_time": average_delivery_time,
+        "most_demanded_product": most_demanded_product
+    }
 
 
 
