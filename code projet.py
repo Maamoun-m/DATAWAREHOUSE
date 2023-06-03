@@ -153,7 +153,7 @@ class Database:
 
 
 class Product:
-    def __init__(self, product_id, description, price, quantity_in_stock):
+    def __init__(self, product_id, description=None, price=None, quantity_in_stock=None):
         self._product_id = product_id
         self._description = description
         self._price = price
@@ -215,7 +215,7 @@ class Order:
         self._products = products
 
 class Warehouse:
-    def __init__(self, capacity):
+    def __init__(self, capacity,product):
         self._capacity = capacity
         self._products_in_stock = []
 
@@ -227,6 +227,7 @@ class Warehouse:
     
     def get_products_in_stock(self):
         return self._products_in_stock
+
     
     def add_product(self, product):
         self._products_in_stock.append(product)
@@ -306,9 +307,8 @@ class Invoice:
         self._products = products
 
 class Report:
-    def __init__(self, report_date, sales_statistics, revenue):
+    def __init__(self, revenue):
         self._report_date = report_date
-        self._sales_statistics = sales_statistics
         self._revenue = revenue
     
     def get_report_date(self):
@@ -316,13 +316,7 @@ class Report:
     
     def set_report_date(self, report_date):
         self._report_date = report_date
-    
-    def get_sales_statistics(self):
-        return self._sales_statistics
-    
-    def set_sales_statistics(self, sales_statistics):
-        self._sales_statistics = sales_statistics
-    
+
     def get_revenue(self):
         return self._revenue
     
