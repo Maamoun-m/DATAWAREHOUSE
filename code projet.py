@@ -4,6 +4,12 @@ Created on Thu May 21 10:20:29 2023
 
 @author: mekki
 """
+# -*- coding: utf-8 -*-
+"""
+Created on Thu May 21 10:20:29 2023
+
+@author: mekki
+"""
 class Personne:
     def __init__(self, personne_id, name=None, address=None, phone_number=None):
         self._personne_id = personne_id
@@ -235,7 +241,7 @@ class Order:
 
 
 class Warehouse:
-    def __init__(self, capacity=None,product=None):
+    def __init__(self, capacity=None,products_in_stock=None):
         self._capacity = capacity
         self._products_in_stock = []
 
@@ -377,5 +383,6 @@ class Invoice:
     def set_products(self, products):
         self._products = products
     products=property(get_product_id,set_product_id)
+
 
 
