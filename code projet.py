@@ -4,6 +4,12 @@ Created on Thu May 21 10:20:29 2023
 
 @author: mekki
 """
+# -*- coding: utf-8 -*-
+"""
+Created on Thu May 21 10:20:29 2023
+
+@author: mekki
+"""
 class Personne:
     def __init__(self, personne_id, name=None, address=None, phone_number=None):
         self._personne_id = personne_id
@@ -70,7 +76,7 @@ class Employee(Personne):
     
     def set_position(self, position):
         self._position = position
-    position=property(set_property_id,get_property_id)
+    position=property(set_position,get_position)
     
     def get_salary(self):
         return self._salary
@@ -210,14 +216,14 @@ class Order:
     
     def set_order_id(self, order_id):
         self._order_id = order_id
-    ord_id=property(set_property_id,get_property_id)
+    ord_id=property(set_order_id,get_order_id)
     
     def get_order_date(self):
         return self._order_date
     
     def set_order_date(self, order_date):
         self._order_date = order_date
-    date=property(set_order_date,get_property_id)
+    date=property(set_order_date,get_order_date)
     
     def get_client(self):
         return self._client
@@ -231,11 +237,11 @@ class Order:
     
     def set_products(self, products):
         self._products = products
-    product=property(set_product,get_product)
+    product=property(set_products,get_products)
 
 
 class Warehouse:
-    def __init__(self, capacity=None,product=None):
+    def __init__(self, capacity=None,products_in_stock=None):
         self._capacity = capacity
         self._products_in_stock = []
 
@@ -254,7 +260,7 @@ class Warehouse:
     
     def remove_product(self, product):
         self._products_in_stock.remove(product)
-    product=property(get_product_in_stock,add_product,remove_product)
+    product=property(get_products_in_stock,add_product,remove_product)
 
 
 class Sales:
@@ -376,6 +382,7 @@ class Invoice:
     
     def set_products(self, products):
         self._products = products
-    products=property(get_product_id,set_product_id)
+    products=property(get_products,set_products)
+
 
 
