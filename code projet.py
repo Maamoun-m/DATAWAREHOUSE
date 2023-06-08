@@ -10,6 +10,7 @@ Created on Thu May 21 10:20:29 2023
 
 @author: mekki
 """
+import pandas as pd
 class Personne:
     def __init__(self, personne_id, name=None, address=None, phone_number=None):
         self._personne_id = personne_id
@@ -383,6 +384,19 @@ class Invoice:
     def set_products(self, products):
         self._products = products
     products=property(get_products,set_products)
+
+df1 = pd.read_csv("C:\Users\mekki\OneDrive\Documents\Projet Stage\test_class_personne.csv")
+personne_instances = []
+for index, row in df1.iterrows():
+    personne_id = row['personne_id']
+    name = row['name']
+    address = row['address']
+    phone_number = row['phone_number']
+    personne = Personne(personne_id, name, address, phone_number)
+    personne_instances.append(personne)
+for personne in personne_instances:
+    print(personne.id, personne.name, personne.address, personne.phone)
+
 
 
 
