@@ -18,33 +18,32 @@ class Personne:
         self._address = address
         self._phone_number = phone_number
     
-    def get_personne_id(self):
+    def get_id(self):
         return self._personne_id
     
-    def set_personne_id(self, personne_id):
+    def set_id(self, personne_id):
         self._personne_id = personne_id
-    id=property(set_personne_id,get_personne_id)
+    id=property(get_id,set_id)
     
     def get_name(self):
         return self._name
-    
     def set_name(self, name):
         self._name = name
-    name=property(set_name,get_name)
+    name=property(get_name,set_name)
     
     def get_address(self):
         return self._address
     
     def set_address(self, address):
         self._address = address
-    address=property(set_address,get_address)
+    address=property(get_address,set_address)
     
     def get_phone_number(self):
         return self._phone_number
     
     def set_phone_number(self, phone_number):
         self._phone_number = phone_number
-    phone=property(set_phone_number,get_phone_number)
+    phone=property(get_phone_number,set_phone_number)
 
 class Supplier(Personne):
     def __init__(self, supplier_id, name=None, address=None, phone_number=None):
@@ -56,7 +55,7 @@ class Supplier(Personne):
     
     def set_supplier_id(self, supplier_id):
         self._supplier_id = supplier_id
-    supp_id=property(set_supplier_id,get_supplier_id)
+    supp_id=property(get_supplier_id,set_supplier_id)
 
 class Employee(Personne):
     def __init__(self, employee_id, name=None, address=None, phone_number=None, position=None, salary=None):
@@ -70,22 +69,21 @@ class Employee(Personne):
     
     def set_employee_id(self, employee_id):
         self._employee_id = employee_id
-    emp_id=property(set_employee_id,get_employee_id)
+    emp_id=property(get_employee_id,set_employee_id)
     
     def get_position(self):
         return self._position
     
     def set_position(self, position):
         self._position = position
-    position=property(set_position,get_position)
+    position=property(get_position,set_position)
     
     def get_salary(self):
         return self._salary
 
-    
     def set_salary(self, salary):
         self._salary = salary
-    salary=property(set_salary,get_salary)
+    salary=property(get_salary,set_salary)
 
 class Client(Personne):
     def __init__(self, client_id, name=None, address=None, phone_number=None):
@@ -96,7 +94,7 @@ class Client(Personne):
     
     def set_client_id(self, client_id):
         self._client_id = client_id
-    clt_id=property(set_client_id,get_client_id)
+    clt_id=property(get_client_id,set_client_id)
 
 class Database:
     def __init__(self):
@@ -180,21 +178,21 @@ class Product:
     
     def set_product_id(self, product_id):
         self._product_id = product_id
-    product_ID=property(set_product_id,get_product_id)
+    product_ID=property(get_product_id,set_product_id)
     
     def get_description(self):
         return self._description
     
     def set_description(self, description):
         self._description = description
-    description=property(set_description,get_description)
+    description=property(get_description,set_description)
 
     def get_price(self):
         return self._price
     
     def set_price(self, price):
         self._price = price
-    prix=property(set_price,get_price)
+    prix=property(get_price,set_price)
     
     def get_quantity_in_stock(self):
         return self._quantity_in_stock
@@ -202,7 +200,7 @@ class Product:
     def set_quantity_in_stock(self, quantity_in_stock):
         self._quantity_in_stock = quantity_in_stock
 
-    stock=property(set_quantity_in_stock,get_quantity_in_stock)
+    stock=property(get_quantity_in_stock,set_quantity_in_stock)
     
 
 class Order:
@@ -217,14 +215,14 @@ class Order:
     
     def set_order_id(self, order_id):
         self._order_id = order_id
-    ord_id=property(set_order_id,get_order_id)
+    ord_id=property(get_order_id,set_order_id)
     
     def get_order_date(self):
         return self._order_date
     
     def set_order_date(self, order_date):
         self._order_date = order_date
-    date=property(set_order_date,get_order_date)
+    date=property(get_order_date,set_order_date)
     
     def get_client(self):
         return self._client
@@ -238,7 +236,7 @@ class Order:
     
     def set_products(self, products):
         self._products = products
-    product=property(set_products,get_products)
+    product=property(get_products,set_products)
 
 
 class Warehouse:
@@ -251,7 +249,7 @@ class Warehouse:
     
     def set_capacity(self, capacity):
         self._capacity = capacity
-    capacity=property(set_capacity,get_capacity)
+    capacity=property(get_capacity,set_capacity)
     
     def get_products_in_stock(self):
         return self._products_in_stock
@@ -291,14 +289,14 @@ class Sales:
     
     def set_quantity_sold(self, quantity_sold):
         self._quantity_sold = quantity_sold
-    sold=property(set_quantity_sold,get_quantity_sold)
+    sold=property(get_quantity_sold,set_quantity_sold)
     
     def get_sale_price(self):
         return self._sale_price
     
     def set_sale_price(self, sale_price):
         self._sale_price = sale_price
-    price=property(set_sale_price,get_sale_price)
+    price=property(get_sale_price,set_sale_price)
     
     def get_client(self):
         return self._client
@@ -307,11 +305,7 @@ class Sales:
         self._client = client
     client=property(get_client,set_client)
 
-    def generate_report(self):
-        revenue = self._quantity_sold * self._sale_price
-        report_date = self._sale_date 
-        report = Report(report_date, revenue)
-        return report
+   
 
     def report(self, products):
         sales_per_client = {}
@@ -349,6 +343,11 @@ class Sales:
             "most_demanded_product": most_demanded_product
         }
 
+     def generate_report(self):
+        revenue = self._quantity_sold * self._sale_price
+        report_date = self._sale_date 
+        report = Report(report_date, revenue)
+        return report
 
 class Invoice:
     def __init__(self, invoice_id, invoice_date=None, total_amount=None, products=None):
@@ -385,17 +384,13 @@ class Invoice:
         self._products = products
     products=property(get_products,set_products)
 
-df1 = pd.read_csv("C:\Users\mekki\OneDrive\Documents\Projet Stage\test_class_personne.csv")
-personne_instances = []
-for index, row in df1.iterrows():
-    personne_id = row['personne_id']
-    name = row['name']
-    address = row['address']
-    phone_number = row['phone_number']
-    personne = Personne(personne_id, name, address, phone_number)
-    personne_instances.append(personne)
-for personne in personne_instances:
-    print(personne.id, personne.name, personne.address, personne.phone)
+# Testing the Personne class
+personne = Personne(1, "John Doe", "123 Main St", "555-1234")
+print(personne.id)  # Output:1
+print(personne.name)  # Output: John Doe
+print(personne.get_address())  # Output: 123 Main St
+print(personne.get_phone_number())
+
 
 
 
