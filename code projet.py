@@ -305,8 +305,6 @@ class Sales:
         self._client = client
     client=property(get_client,set_client)
 
-   
-
     def report(self, products):
         sales_per_client = {}
         for sale in self.sales:
@@ -340,15 +338,15 @@ class Sales:
             "total_sales_per_product": sales_per_product,
             "total_revenue": total_revenue,
             "average_delivery_time": average_delivery_time,
-            "most_demanded_product": most_demanded_product
-        }
+            "most_demanded_product": most_demanded_product }
 
-     def generate_report(self):
+  
+    def generate_report(self):
         revenue = self._quantity_sold * self._sale_price
         report_date = self._sale_date 
-        report = Report(report_date, revenue)
+        report = report(report_date, revenue)
         return report
-
+    
 class Invoice:
     def __init__(self, invoice_id, invoice_date=None, total_amount=None, products=None):
         self._invoice_id = invoice_id
@@ -386,6 +384,7 @@ class Invoice:
 
 #tesr
 personne = Personne(1, "John Doe", "123 Main St", "555-1234")
+
 print(personne.id)  
 print(personne.name) 
 print(personne.get_address())  
