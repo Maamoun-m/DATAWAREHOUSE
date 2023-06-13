@@ -384,11 +384,11 @@ class Invoice:
         self._products = products
     products=property(get_products,set_products)
 
-# Testing the Personne class
+#tesr
 personne = Personne(1, "John Doe", "123 Main St", "555-1234")
-print(personne.id)  # Output:1
-print(personne.name)  # Output: John Doe
-print(personne.get_address())  # Output: 123 Main St
+print(personne.id)  
+print(personne.name) 
+print(personne.get_address())  
 print(personne.get_phone_number())
 
 
