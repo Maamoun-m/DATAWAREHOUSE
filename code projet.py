@@ -4,12 +4,7 @@ Created on Thu May 21 10:20:29 2023
 
 @author: mekki
 """
-# -*- coding: utf-8 -*-
-"""
-Created on Thu May 21 10:20:29 2023
 
-@author: mekki
-"""
 import pandas as pd
 class Personne:
     def __init__(self, personne_id, name=None, address=None, phone_number=None):
@@ -55,7 +50,7 @@ class Supplier(Personne):
     
     def set_supplier_id(self, supplier_id):
         self._supplier_id = supplier_id
-    supp_id=property(get_supplier_id,set_supplier_id)
+    id=property(get_supplier_id,set_supplier_id)
 
 class Employee(Personne):
     def __init__(self, employee_id, name=None, address=None, phone_number=None, position=None, salary=None):
@@ -63,6 +58,8 @@ class Employee(Personne):
         self._employee_id = employee_id
         self._position = position
         self._salary = salary
+        self.phone_number=phone_number
+        self.name=name
 
     def get_employee_id(self):
         return self._employee_id
@@ -85,6 +82,14 @@ class Employee(Personne):
         self._salary = salary
     salary=property(get_salary,set_salary)
 
+    def get_phone_number(self):
+        return self.phone_number
+
+    def set_phone_number(self,phone):
+        self.phone_number=phone
+    phone=property(get_phone_number,set_phone_number)
+
+
 class Client(Personne):
     def __init__(self, client_id, name=None, address=None, phone_number=None):
         super().__init__(client_id, name, address, phone_number)
@@ -95,6 +100,7 @@ class Client(Personne):
     def set_client_id(self, client_id):
         self._client_id = client_id
     clt_id=property(get_client_id,set_client_id)
+
 
 class Database:
     def __init__(self):
@@ -178,7 +184,7 @@ class Product:
     
     def set_product_id(self, product_id):
         self._product_id = product_id
-    product_ID=property(get_product_id,set_product_id)
+    id=property(get_product_id,set_product_id)
     
     def get_description(self):
         return self._description
@@ -215,7 +221,7 @@ class Order:
     
     def set_order_id(self, order_id):
         self._order_id = order_id
-    ord_id=property(get_order_id,set_order_id)
+    id=property(get_order_id,set_order_id)
     
     def get_order_date(self):
         return self._order_date
@@ -229,7 +235,7 @@ class Order:
     
     def set_client(self, client):
         self._client = client
-    
+    client=property(get_client,set_client)
     
     def get_products(self):
         return self._products
@@ -240,9 +246,10 @@ class Order:
 
 
 class Warehouse:
-    def __init__(self, capacity=None,products_in_stock=None):
+    def __init__(self, capacity=None,quantity_in_stock=None,products_in_stock=None):
         self._capacity = capacity
-        self._products_in_stock = []
+        self._products_in_stock = products_in_stock
+        self._quantity_in_stock=quantity_in_stock
 
     def get_capacity(self):
         return self._capacity
@@ -259,7 +266,13 @@ class Warehouse:
     
     def remove_product(self, product):
         self._products_in_stock.remove(product)
-    product=property(get_products_in_stock,add_product,remove_product)
+    products=property(get_products_in_stock,add_product,remove_product)
+
+    def get_quantity_in_stock(self):
+        return self._quantity_in_stock
+    def set_quantity_in_stock(self,q):
+        self._quantity_in_stock=q
+    quantity=property(get_quantity_in_stock,set_quantity_in_stock)
 
 
 class Sales:
@@ -359,14 +372,14 @@ class Invoice:
     
     def set_invoice_id(self, invoice_id):
         self._invoice_id = invoice_id
-    invoice_id=property(get_invoice_id,set_invoice_id)
+    id=property(get_invoice_id,set_invoice_id)
     
     def get_invoice_date(self):
         return self._invoice_date
     
     def set_invoice_date(self, invoice_date):
         self._invoice_date = invoice_date
-    invoice_date=property(get_invoice_id,set_invoice_id)
+    date=property(get_invoice_date,set_invoice_date)
     
     def get_total_amount(self):
         return self._total_amount
@@ -382,13 +395,126 @@ class Invoice:
         self._products = products
     products=property(get_products,set_products)
 
-#tesr
-personne = Personne(1, "John Doe", "123 Main St", "555-1234")
 
-print(personne.id)  
-print(personne.name) 
-print(personne.get_address())  
-print(personne.get_phone_number())
+# For Personne class
+df1 = pd.read_csv("C:/Users/mekki/OneDrive/Documents/Projet Stage/test_class_personne.csv")
+personne_instances = []
+for index, row in df1.iterrows():
+    personne_id = row['personne_id']
+    name = row['name']
+    address = row['address']
+    phone_number = row['phone_number']
+    personne = Personne(personne_id, name, address, phone_number)
+    personne_instances.append(personne)
+for personne in personne_instances:
+    print(personne.id, personne.name, personne.address, personne.phone)
+
+#For Supplier class
+df2=pd.read_csv("C:/Users/mekki/OneDrive/Documents/Projet Stage/test_class_supplier.csv")
+supplier_instances = []
+for index, row in df2.iterrows():
+    supplier_id = row['supplier_id']
+    name = row['name']
+    address = row['address']
+    phone_number = row['phone_number']
+    supplier = Supplier(supplier_id, name, address, phone_number)
+    supplier_instances.append(supplier)
+#for  supp in supplier_instances:
+    #print(supp.id,supp.name,supp.address,supp.phone)
+
+#For Employee class 
+df3=pd.read_csv("C:/Users/mekki/OneDrive/Documents/Projet Stage/test_class_employee.csv")
+employee_instances = []
+for index, row in df3.iterrows():
+    employee_id = row['employee_id']
+    name = row['name']
+    address = row['address']
+    phone_number = row['phone_number']
+    position=row['position']
+    salary=row['salary']
+    employee = Employee(employee_id, name, address, phone_number,position,salary)
+    employee_instances.append(employee)
+#for employee in employee_instances:
+    #print(employee.id,employee.name,employee.address,employee.phone,employee.position,employee.salary)
+
+#For Client class
+
+df4=pd.read_csv("C:/Users/mekki/OneDrive/Documents/Projet Stage/test_class_client.csv")
+client_instances = []
+for index, row in df4.iterrows():
+    client_id = row['client_id']
+    name = row['name']
+    address = row['address']
+    phone_number = row['phone_number']
+    client = Client(client_id, name, address, phone_number)
+    client_instances.append(client)
+#for client in client_instances:
+    #print(client.id,client.name,client.address,client.phone)
+
+#For product class
+df5=pd.read_csv("C:/Users/mekki/OneDrive/Documents/Projet Stage/test_class_product.csv")
+product_instances = []
+
+for index, row in df5.iterrows():
+    product_id = row['product_id']
+    description = row['description']
+    price = row['price']
+    quantity_in_stock = row['quantity_in_stock']
+    product = Product(product_id, description, price, quantity_in_stock)
+    product_instances.append(product)
+
+#for product in product_instances:
+    #print(product.id, product.description, product.prix, product.stock)
+
+#For Order class
+df6=pd.read_csv("C:/Users/mekki/OneDrive/Documents/Projet Stage/test_class_order.csv")
+order_instances = []
+
+for index, row in df6.iterrows():
+    order_id = row['order_id']
+    order_date = row['order_date']
+    client = row['client_id']
+    products = row['product_ids']
+    order = Order(order_id, order_date, client, products)
+    order_instances.append(order)
+
+#for order in order_instances:
+    #print(order.id, order.date, order.client, order.product)
+
+#For Invoice class
+
+df7=pd.read_csv("C:/Users/mekki/OneDrive/Documents/Projet Stage/test_class_invoice.csv")
+invoice_instances = []
+
+for index, row in df7.iterrows():
+    invoice_id = row['invoice_id']
+    invoice_date = row['invoice_date']
+    total_amount = row['total_amount']
+    products = row['product_ids']
+    invoice = Invoice(invoice_id, invoice_date, total_amount, products)
+    invoice_instances.append(invoice)
+
+#for invoice in invoice_instances:
+   # print(invoice.id,invoice.date , invoice.total_amount, invoice.products)
+
+#For Warehouse class
+
+df8=pd.read_csv("C:/Users/mekki/OneDrive/Documents/Projet Stage/test_class_warehouse.csv")
+warehouse=Warehouse(10000,0) #on a choisit pour le moment capacity=10000
+prd=0
+for index, row in df8.iterrows():
+    products = row['quantity_in_stock']
+    prd+=products
+warehouse.quantity=prd
+
+
+print("Warehouse Capacity:", warehouse.capacity)
+print("Products in Stock:", warehouse.quantity)
+
+
+
+
+
 
 
 
