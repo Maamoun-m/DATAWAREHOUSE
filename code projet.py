@@ -396,6 +396,12 @@ class Invoice:
     products=property(get_products,set_products)
 
 
+
+
+
+
+###### TESTS 
+
 # For Personne class
 df1 = pd.read_csv("C:/Users/mekki/OneDrive/Documents/Projet Stage/test_class_personne.csv")
 personne_instances = []
@@ -406,8 +412,8 @@ for index, row in df1.iterrows():
     phone_number = row['phone_number']
     personne = Personne(personne_id, name, address, phone_number)
     personne_instances.append(personne)
-for personne in personne_instances:
-    print(personne.id, personne.name, personne.address, personne.phone)
+#for personne in personne_instances:
+    #print(personne.id, personne.name, personne.address, personne.phone)
 
 #For Supplier class
 df2=pd.read_csv("C:/Users/mekki/OneDrive/Documents/Projet Stage/test_class_supplier.csv")
@@ -495,7 +501,7 @@ for index, row in df7.iterrows():
     invoice_instances.append(invoice)
 
 #for invoice in invoice_instances:
-   # print(invoice.id,invoice.date , invoice.total_amount, invoice.products)
+    #print(invoice.id,invoice.date , invoice.total_amount, invoice.products)
 
 #For Warehouse class
 
@@ -503,21 +509,136 @@ df8=pd.read_csv("C:/Users/mekki/OneDrive/Documents/Projet Stage/test_class_wareh
 warehouse=Warehouse(10000,0) #on a choisit pour le moment capacity=10000
 prd=0
 for index, row in df8.iterrows():
-    products = row['quantity_in_stock']
-    prd+=products
-warehouse.quantity=prd
-
-
-print("Warehouse Capacity:", warehouse.capacity)
-print("Products in Stock:", warehouse.quantity)
+    quant = row['quantity_in_stock']
+    prd+=quant
 
 
 
+#### USER INTERFACE 
 
+import tkinter as tk
 
+# Sample data
+clients_data = [
+    {"client_id": 1, "name": "John Doe", "address": "123 Main St"},
+    {"client_id": 2, "name": "Jane Smith", "address": "456 Elm St"},
+    {"client_id": 3, "name": "Mike Johnson", "address": "789 Oak St"}
+]
 
+employees_data = [
+    {"employee_id": 1, "name": "Alice Johnson", "position": "Manager"},
+    {"employee_id": 2, "name": "Bob Smith", "position": "Salesperson"},
+    {"employee_id": 3, "name": "Eve Davis", "position": "Assistant"}
+]
 
+products_data = [
+    {"product_id": 1, "name": "Product A", "price": 10.99},
+    {"product_id": 2, "name": "Product B", "price": 5.99},
+    {"product_id": 3, "name": "Product C", "price": 7.99}
+]
 
+orders_data = [
+    {"order_id": 1, "product": "Product A", "quantity": 2},
+    {"order_id": 2, "product": "Product C", "quantity": 5},
+    {"order_id": 3, "product": "Product B", "quantity": 3}
+]
 
+suppliers_data = [
+    {"supplier_id": 1, "name": "Supplier X", "address": "123 Supplier St"},
+    {"supplier_id": 2, "name": "Supplier Y", "address": "456 Supplier St"},
+    {"supplier_id": 3, "name": "Supplier Z", "address": "789 Supplier St"}
+]
 
+# Create the main window
+window = tk.Tk()
+window.title("Database Viewer")
+
+# Create the menu bar
+menubar = tk.Menu(window)
+
+# Create the Main menu
+main_menu = tk.Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Main Menu", menu=main_menu)
+
+# Add "WORK IN PROGRESS" as an output message to the Main menu
+def show_work_in_progress():
+    output.delete(1.0, tk.END)
+    output.insert(tk.END, "WORK IN PROGRESS")
+
+main_menu.add_command(label="WORK IN PROGRESS", command=show_work_in_progress)
+
+# Create the Clients menu
+clients_menu = tk.Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Clients", menu=clients_menu)
+
+# Add client information to the Clients menu
+def list_clients():
+    output.delete(1.0, tk.END)
+    for client in clients_data:
+        output.insert(tk.END, f"Client ID: {client['client_id']}\nName: {client['name']}\nAddress: {client['address']}\n\n")
+
+clients_menu.add_command(label="List", command=list_clients)
+clients_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
+
+# Create the Employees menu
+employees_menu = tk.Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Employees", menu=employees_menu)
+
+# Add employee information to the Employees menu
+def list_employees():
+    output.delete(1.0, tk.END)
+    for employee in employees_data:
+        output.insert(tk.END, f"Employee ID: {employee['employee_id']}\nName: {employee['name']}\nPosition: {employee['position']}\n\n")
+
+employees_menu.add_command(label="List", command=list_employees)
+employees_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
+
+# Create the Products menu
+products_menu = tk.Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Products", menu=products_menu)
+
+# Add product information to the Products menu
+def list_products():
+    output.delete(1.0, tk.END)
+    for product in products_data:
+        output.insert(tk.END, f"Product ID: {product['product_id']}\nName: {product['name']}\nPrice: {product['price']}\n\n")
+
+products_menu.add_command(label="List", command=list_products)
+products_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
+
+# Create the Orders menu
+orders_menu = tk.Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Orders", menu=orders_menu)
+
+# Add order information to the Orders menu
+def list_orders():
+    output.delete(1.0, tk.END)
+    for order in orders_data:
+        output.insert(tk.END, f"Order ID: {order['order_id']}\nProduct: {order['product']}\nQuantity: {order['quantity']}\n\n")
+
+orders_menu.add_command(label="List", command=list_orders)
+orders_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
+
+# Create the Suppliers menu
+suppliers_menu = tk.Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Suppliers", menu=suppliers_menu)
+
+# Add supplier information to the Suppliers menu
+def list_suppliers():
+    output.delete(1.0, tk.END)
+    for supplier in suppliers_data:
+        output.insert(tk.END, f"Supplier ID: {supplier['supplier_id']}\nName: {supplier['name']}\nAddress: {supplier['address']}\n\n")
+
+suppliers_menu.add_command(label="List", command=list_suppliers)
+suppliers_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
+
+# Create the Text widget for output
+output = tk.Text(window)
+output.pack(fill=tk.BOTH, expand=True)
+
+# Configure the window to use the menu bar
+window.config(menu=menubar)
+
+# Start the Tkinter event loop
+window.mainloop()
 
