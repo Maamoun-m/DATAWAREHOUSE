@@ -515,7 +515,6 @@ for index, row in df8.iterrows():
 
 
 #### USER INTERFACE 
-
 import tkinter as tk
 
 # Sample data
@@ -549,29 +548,63 @@ suppliers_data = [
     {"supplier_id": 3, "name": "Supplier Z", "address": "789 Supplier St"}
 ]
 
-# Create the main window
 window = tk.Tk()
 window.title("Database Viewer")
 
-# Create the menu bar
+login_window = tk.Toplevel(window)
+login_window.title("Login")
+
+username_label = tk.Label(login_window, text="Username (Employee Name):")
+username_label.pack()
+username_entry = tk.Entry(login_window)
+username_entry.pack()
+
+password_label = tk.Label(login_window, text="Password (Employee ID):")
+password_label.pack()
+password_entry = tk.Entry(login_window, show="*")
+password_entry.pack()
+
+
+def login():
+    employee_name = username_entry.get()
+    employee_id = password_entry.get()
+
+    for employee in employees_data:
+        if employee["name"] == employee_name and str(employee["employee_id"]) == employee_id:
+            # Remove login window and show the main window
+            login_window.destroy()
+            window.deiconify()
+            break
+    else:
+        # Clear the username and password fields
+        username_entry.delete(0, tk.END)
+        password_entry.delete(0, tk.END)
+        # Show an error message
+        error_label.config(text="Invalid employee name or ID")
+
+        
+login_button = tk.Button(login_window, text="Login", command=login)
+login_button.pack()
+
+error_label = tk.Label(login_window, fg="red")
+error_label.pack()
+
+window.withdraw()
+
 menubar = tk.Menu(window)
 
-# Create the Main menu
 main_menu = tk.Menu(menubar, tearoff=0)
 menubar.add_cascade(label="Main Menu", menu=main_menu)
 
-# Add "WORK IN PROGRESS" as an output message to the Main menu
 def show_work_in_progress():
     output.delete(1.0, tk.END)
     output.insert(tk.END, "WORK IN PROGRESS")
 
 main_menu.add_command(label="WORK IN PROGRESS", command=show_work_in_progress)
 
-# Create the Clients menu
 clients_menu = tk.Menu(menubar, tearoff=0)
 menubar.add_cascade(label="Clients", menu=clients_menu)
 
-# Add client information to the Clients menu
 def list_clients():
     output.delete(1.0, tk.END)
     for client in clients_data:
@@ -580,11 +613,9 @@ def list_clients():
 clients_menu.add_command(label="List", command=list_clients)
 clients_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
 
-# Create the Employees menu
 employees_menu = tk.Menu(menubar, tearoff=0)
 menubar.add_cascade(label="Employees", menu=employees_menu)
 
-# Add employee information to the Employees menu
 def list_employees():
     output.delete(1.0, tk.END)
     for employee in employees_data:
@@ -593,11 +624,9 @@ def list_employees():
 employees_menu.add_command(label="List", command=list_employees)
 employees_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
 
-# Create the Products menu
 products_menu = tk.Menu(menubar, tearoff=0)
 menubar.add_cascade(label="Products", menu=products_menu)
 
-# Add product information to the Products menu
 def list_products():
     output.delete(1.0, tk.END)
     for product in products_data:
@@ -606,11 +635,9 @@ def list_products():
 products_menu.add_command(label="List", command=list_products)
 products_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
 
-# Create the Orders menu
 orders_menu = tk.Menu(menubar, tearoff=0)
 menubar.add_cascade(label="Orders", menu=orders_menu)
 
-# Add order information to the Orders menu
 def list_orders():
     output.delete(1.0, tk.END)
     for order in orders_data:
@@ -619,11 +646,9 @@ def list_orders():
 orders_menu.add_command(label="List", command=list_orders)
 orders_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
 
-# Create the Suppliers menu
 suppliers_menu = tk.Menu(menubar, tearoff=0)
 menubar.add_cascade(label="Suppliers", menu=suppliers_menu)
 
-# Add supplier information to the Suppliers menu
 def list_suppliers():
     output.delete(1.0, tk.END)
     for supplier in suppliers_data:
@@ -632,13 +657,9 @@ def list_suppliers():
 suppliers_menu.add_command(label="List", command=list_suppliers)
 suppliers_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
 
-# Create the Text widget for output
 output = tk.Text(window)
 output.pack(fill=tk.BOTH, expand=True)
 
-# Configure the window to use the menu bar
 window.config(menu=menubar)
 
-# Start the Tkinter event loop
 window.mainloop()
-
