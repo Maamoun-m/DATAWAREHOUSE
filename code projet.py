@@ -51,43 +51,51 @@ class Supplier(Personne):
     def set_supplier_id(self, supplier_id):
         self._supplier_id = supplier_id
     id=property(get_supplier_id,set_supplier_id)
-
 class Employee(Personne):
-    def __init__(self, employee_id, name=None, address=None, phone_number=None, position=None, salary=None):
+    def __init__(self, employee_id, name=None, address=None, phone_number=None, position=None, salary=None, authority=None):
         super().__init__(employee_id, name, address, phone_number)
         self._employee_id = employee_id
         self._position = position
         self._salary = salary
-        self.phone_number=phone_number
-        self.name=name
+        self.phone_number = phone_number
+        self.name = name
+        self._authority = authority
 
     def get_employee_id(self):
         return self._employee_id
-    
+
     def set_employee_id(self, employee_id):
         self._employee_id = employee_id
-    emp_id=property(get_employee_id,set_employee_id)
-    
+    emp_id = property(get_employee_id, set_employee_id)
+
     def get_position(self):
         return self._position
-    
+
     def set_position(self, position):
         self._position = position
-    position=property(get_position,set_position)
-    
+    position = property(get_position, set_position)
+
     def get_salary(self):
         return self._salary
 
     def set_salary(self, salary):
         self._salary = salary
-    salary=property(get_salary,set_salary)
+    salary = property(get_salary, set_salary)
 
     def get_phone_number(self):
         return self.phone_number
 
-    def set_phone_number(self,phone):
-        self.phone_number=phone
-    phone=property(get_phone_number,set_phone_number)
+    def set_phone_number(self, phone):
+        self.phone_number = phone
+    phone = property(get_phone_number, set_phone_number)
+
+    def get_authority(self):
+        return self._authority
+
+    def set_authority(self, authority):
+        self._authority = authority
+    authority = property(get_authority, set_authority)
+
 
 
 class Client(Personne):
@@ -644,7 +652,7 @@ def list_orders():
         output.insert(tk.END, f"Order ID: {order['order_id']}\nProduct: {order['product']}\nQuantity: {order['quantity']}\n\n")
 
 orders_menu.add_command(label="List", command=list_orders)
-orders_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
+orders_menu.add_command(label="Return to Main Menu",command=show_work_in_progress)
 
 suppliers_menu = tk.Menu(menubar, tearoff=0)
 menubar.add_cascade(label="Suppliers", menu=suppliers_menu)
