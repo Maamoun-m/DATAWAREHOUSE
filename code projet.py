@@ -524,54 +524,44 @@ for index, row in df8.iterrows():
 
 #### USER INTERFACE 
 import tkinter as tk
+from tkinter import ttk
+from tkinter import simpledialog, messagebox
+import datetime
 
 # Sample data
 clients_data = [
-    {"client_id": 1, "name": "John Doe", "address": "123 Main St"},
-    {"client_id": 2, "name": "Jane Smith", "address": "456 Elm St"},
-    {"client_id": 3, "name": "Mike Johnson", "address": "789 Oak St"}
-]
-
-employees_data = [
-    {"employee_id": 1, "name": "Alice Johnson", "position": "Manager"},
-    {"employee_id": 2, "name": "Bob Smith", "position": "Salesperson"},
-    {"employee_id": 3, "name": "Eve Davis", "position": "Assistant"}
+    {"client_id": 1, "name": "John Doe", "address": "123 Main St", "date": datetime.date(2021, 1, 1)},
+    {"client_id": 2, "name": "Jane Smith", "address": "456 Elm St", "date": datetime.date(2021, 1, 2)},
+    {"client_id": 3, "name": "Mike Johnson", "address": "789 Oak St", "date": datetime.date(2021, 1, 3)}
 ]
 
 products_data = [
-    {"product_id": 1, "name": "Product A", "price": 10.99},
-    {"product_id": 2, "name": "Product B", "price": 5.99},
-    {"product_id": 3, "name": "Product C", "price": 7.99}
+    {"product_id": 1, "name": "Product A", "price": 10.0},
+    {"product_id": 2, "name": "Product B", "price": 20.0},
+    {"product_id": 3, "name": "Product C", "price": 30.0}
 ]
 
-orders_data = [
-    {"order_id": 1, "product": "Product A", "quantity": 2},
-    {"order_id": 2, "product": "Product C", "quantity": 5},
-    {"order_id": 3, "product": "Product B", "quantity": 3}
+sales_data = [
+    {"sale_id": 1, "client_id": 1, "product_id": 2, "quantity": 5, "date": datetime.date(2021, 1, 4)},
+    {"sale_id": 2, "client_id": 2, "product_id": 3, "quantity": 3, "date": datetime.date(2021, 1, 5)},
+    {"sale_id": 3, "client_id": 3, "product_id": 1, "quantity": 2, "date": datetime.date(2021, 1, 6)}
 ]
 
-suppliers_data = [
-    {"supplier_id": 1, "name": "Supplier X", "address": "123 Supplier St"},
-    {"supplier_id": 2, "name": "Supplier Y", "address": "456 Supplier St"},
-    {"supplier_id": 3, "name": "Supplier Z", "address": "789 Supplier St"}
+invoices_data = [
+    {"invoice_id": 1, "sale_id": 1, "amount": 100.0, "date": datetime.date(2021, 1, 7)},
+    {"invoice_id": 2, "sale_id": 2, "amount": 90.0, "date": datetime.date(2021, 1, 8)},
+    {"invoice_id": 3, "sale_id": 3, "amount": 60.0, "date": datetime.date(2021, 1, 9)}
 ]
+
+employees_data = [
+    {"employee_id": 1, "name": "Alice Johnson", "position": "Manager", "authority": "admin"},
+    {"employee_id": 2, "name": "Bob Smith", "position": "Salesperson", "authority": "user"},
+    {"employee_id": 3, "name": "Eve Davis", "position": "Assistant", "authority": "user"}
+]
+
 
 window = tk.Tk()
 window.title("Database Viewer")
-
-login_window = tk.Toplevel(window)
-login_window.title("Login")
-
-username_label = tk.Label(login_window, text="Username (Employee Name):")
-username_label.pack()
-username_entry = tk.Entry(login_window)
-username_entry.pack()
-
-password_label = tk.Label(login_window, text="Password (Employee ID):")
-password_label.pack()
-password_entry = tk.Entry(login_window, show="*")
-password_entry.pack()
-
 
 def login():
     employee_name = username_entry.get()
@@ -582,6 +572,8 @@ def login():
             # Remove login window and show the main window
             login_window.destroy()
             window.deiconify()
+            if employee["authority"] == "admin":
+                enable_editing()
             break
     else:
         # Clear the username and password fields
@@ -590,84 +582,376 @@ def login():
         # Show an error message
         error_label.config(text="Invalid employee name or ID")
 
-        
+def enable_editing():
+    clients_menu.entryconfig("Add", state="normal")
+    clients_menu.entryconfig("Modify", state="normal")
+    clients_menu.entryconfig("Delete", state="normal")
+
+    products_menu.entryconfig("Add", state="normal")
+    products_menu.entryconfig("Modify", state="normal")
+    products_menu.entryconfig("Delete", state="normal")
+
+    sales_menu.entryconfig("Add", state="normal")
+    sales_menu.entryconfig("Modify", state="normal")
+    sales_menu.entryconfig("Delete", state="normal")
+
+    invoices_menu.entryconfig("Add", state="normal")
+    invoices_menu.entryconfig("Modify", state="normal")
+    invoices_menu.entryconfig("Delete", state="normal")
+
+def list_clients():
+    output.delete(*output.get_children())
+    for client in clients_data:
+        output.insert("", tk.END, text="Client", values=(client["client_id"], client["name"], client["address"], client["date"]))
+
+def add_client():
+    name = simpledialog.askstring("Add Client", "Enter client name:")
+    if name:
+        address = simpledialog.askstring("Add Client", "Enter client address:")
+        if address:
+            date = prompt_date()
+            if date:
+                client_id = len(clients_data) + 1
+                client = {"client_id": client_id, "name": name, "address": address, "date": date}
+                clients_data.append(client)
+                list_clients()
+
+def modify_client():
+    selected_item = output.focus()
+    if selected_item:
+        item = output.item(selected_item)
+        values = item["values"]
+        client_id = values[0]
+        for client in clients_data:
+            if client["client_id"] == client_id:
+                name = simpledialog.askstring("Modify Client", "Enter client name:", initialvalue=client["name"])
+                if name:
+                    address = simpledialog.askstring("Modify Client", "Enter client address:", initialvalue=client["address"])
+                    if address:
+                        date = prompt_date()
+                        if date:
+                            client["name"] = name
+                            client["address"] = address
+                            client["date"] = date
+                            list_clients()
+                break
+
+def delete_client():
+    selected_item = output.focus()
+    if selected_item:
+        item = output.item(selected_item)
+        values = item["values"]
+        client_id = values[0]
+        client_name = values[1]
+        confirmation = messagebox.askyesno("Delete Client", f"Are you sure you want to delete the client: {client_name} ({client_id})?")
+        if confirmation:
+            for client in clients_data:
+                if client["client_id"] == client_id:
+                    clients_data.remove(client)
+                    break
+            list_clients()
+
+def list_products():
+    output.delete(*output.get_children())
+    for product in products_data:
+        output.insert("", tk.END, text="Product", values=(product["product_id"], product["name"], product["price"]))
+
+def add_product():
+    name = simpledialog.askstring("Add Product", "Enter product name:")
+    if name:
+        price = simpledialog.askfloat("Add Product", "Enter product price:")
+        if price:
+            product_id = len(products_data) + 1
+            product = {"product_id": product_id, "name": name, "price": price}
+            products_data.append(product)
+            list_products()
+
+def modify_product():
+    selected_item = output.focus()
+    if selected_item:
+        item = output.item(selected_item)
+        values = item["values"]
+        product_id = values[0]
+        for product in products_data:
+            if product["product_id"] == product_id:
+                name = simpledialog.askstring("Modify Product", "Enter product name:", initialvalue=product["name"])
+                if name:
+                    price = simpledialog.askfloat("Modify Product", "Enter product price:", initialvalue=product["price"])
+                    if price:
+                        product["name"] = name
+                        product["price"] = price
+                        list_products()
+                break
+
+def delete_product():
+    selected_item = output.focus()
+    if selected_item:
+        item = output.item(selected_item)
+        values = item["values"]
+        product_id = values[0]
+        product_name = values[1]
+        confirmation = messagebox.askyesno("Delete Product", f"Are you sure you want to delete the product: {product_name} ({product_id})?")
+        if confirmation:
+            for product in products_data:
+                if product["product_id"] == product_id:
+                    products_data.remove(product)
+                    break
+            list_products()
+
+def list_sales():
+    output.delete(*output.get_children())
+    for sale in sales_data:
+        client_id = sale["client_id"]
+        product_id = sale["product_id"]
+        client_name = get_client_name(client_id)
+        product_name = get_product_name(product_id)
+        output.insert("", tk.END, text="Sale", values=(sale["sale_id"], client_name, product_name, sale["quantity"], sale["date"]))
+
+def add_sale():
+    client_id = prompt_client_id()
+    if client_id is not None:
+        product_id = prompt_product_id()
+        if product_id is not None:
+            quantity = prompt_quantity()
+            if quantity is not None:
+                date = prompt_date()
+                if date:
+                    sale_id = len(sales_data) + 1
+                    sale = {"sale_id": sale_id, "client_id": client_id, "product_id": product_id, "quantity": quantity, "date": date}
+                    sales_data.append(sale)
+                    list_sales()
+
+def modify_sale():
+    selected_item = output.focus()
+    if selected_item:
+        item = output.item(selected_item)
+        values = item["values"]
+        sale_id = values[0]
+        for sale in sales_data:
+            if sale["sale_id"] == sale_id:
+                client_id = prompt_client_id(initialvalue=sale["client_id"])
+                if client_id is not None:
+                    product_id = prompt_product_id(initialvalue=sale["product_id"])
+                    if product_id is not None:
+                        quantity = prompt_quantity(initialvalue=sale["quantity"])
+                        if quantity is not None:
+                            date = prompt_date(initialvalue=sale["date"])
+                            if date:
+                                sale["client_id"] = client_id
+                                sale["product_id"] = product_id
+                                sale["quantity"] = quantity
+                                sale["date"] = date
+                                list_sales()
+                break
+
+def delete_sale():
+    selected_item = output.focus()
+    if selected_item:
+        item = output.item(selected_item)
+        values = item["values"]
+        sale_id = values[0]
+        confirmation = messagebox.askyesno("Delete Sale", f"Are you sure you want to delete the sale: {sale_id}?")
+        if confirmation:
+            for sale in sales_data:
+                if sale["sale_id"] == sale_id:
+                    sales_data.remove(sale)
+                    break
+            list_sales()
+
+def list_invoices():
+    output.delete(*output.get_children())
+    for invoice in invoices_data:
+        sale_id = invoice["sale_id"]
+        sale_details = get_sale_details(sale_id)
+        client_name = get_client_name(sale_details["client_id"])
+        product_name = get_product_name(sale_details["product_id"])
+        output.insert("", tk.END, text="Invoice", values=(invoice["invoice_id"], client_name, product_name, sale_details["quantity"], invoice["amount"], invoice["date"]))
+
+def add_invoice():
+    sale_id = prompt_sale_id()
+    if sale_id is not None:
+        amount = simpledialog.askfloat("Add Invoice", "Enter invoice amount:")
+        if amount:
+            date = prompt_date()
+            if date:
+                invoice_id = len(invoices_data) + 1
+                invoice = {"invoice_id": invoice_id, "sale_id": sale_id, "amount": amount, "date": date}
+                invoices_data.append(invoice)
+                list_invoices()
+
+def modify_invoice():
+    selected_item = output.focus()
+    if selected_item:
+        item = output.item(selected_item)
+        values = item["values"]
+        invoice_id = values[0]
+        for invoice in invoices_data:
+            if invoice["invoice_id"] == invoice_id:
+                sale_id = prompt_sale_id(initialvalue=invoice["sale_id"])
+                if sale_id is not None:
+                    amount = simpledialog.askfloat("Modify Invoice", "Enter invoice amount:", initialvalue=invoice["amount"])
+                    if amount:
+                        date = prompt_date(initialvalue=invoice["date"])
+                        if date:
+                            invoice["sale_id"] = sale_id
+                            invoice["amount"] = amount
+                            invoice["date"] = date
+                            list_invoices()
+                break
+
+def delete_invoice():
+    selected_item = output.focus()
+    if selected_item:
+        item = output.item(selected_item)
+        values = item["values"]
+        invoice_id = values[0]
+        confirmation = messagebox.askyesno("Delete Invoice", f"Are you sure you want to delete the invoice: {invoice_id}?")
+        if confirmation:
+            for invoice in invoices_data:
+                if invoice["invoice_id"] == invoice_id:
+                    invoices_data.remove(invoice)
+                    break
+            list_invoices()
+
+def prompt_date(initialvalue=datetime.date.today()):
+    date_str = simpledialog.askstring("Date", "Enter date (YYYY-MM-DD):", initialvalue=initialvalue)
+    try:
+        date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+        return date
+    except (ValueError, TypeError):
+        messagebox.showerror("Invalid Date", "Invalid date format. Please enter a date in YYYY-MM-DD format.")
+
+def prompt_client_id(initialvalue=""):
+    client_id_str = simpledialog.askstring("Client ID", "Enter client ID:", initialvalue=initialvalue)
+    try:
+        client_id = int(client_id_str)
+        if client_id > 0:
+            return client_id
+        else:
+            messagebox.showerror("Invalid Client ID", "Client ID must be a positive integer.")
+    except (ValueError, TypeError):
+        messagebox.showerror("Invalid Client ID", "Invalid client ID. Please enter a valid integer value.")
+
+def prompt_product_id(initialvalue=""):
+    product_id_str = simpledialog.askstring("Product ID", "Enter product ID:", initialvalue=initialvalue)
+    try:
+        product_id = int(product_id_str)
+        if product_id > 0:
+            return product_id
+        else:
+            messagebox.showerror("Invalid Product ID", "Product ID must be a positive integer.")
+    except (ValueError, TypeError):
+        messagebox.showerror("Invalid Product ID", "Invalid product ID. Please enter a valid integer value.")
+
+def prompt_quantity(initialvalue=""):
+    quantity_str = simpledialog.askstring("Quantity", "Enter quantity:", initialvalue=initialvalue)
+    try:
+        quantity = int(quantity_str)
+        if quantity > 0:
+            return quantity
+        else:
+            messagebox.showerror("Invalid Quantity", "Quantity must be a positive integer.")
+    except (ValueError, TypeError):
+        messagebox.showerror("Invalid Quantity", "Invalid quantity. Please enter a valid integer value.")
+
+def prompt_sale_id(initialvalue=""):
+    sale_id_str = simpledialog.askstring("Sale ID", "Enter sale ID:", initialvalue=initialvalue)
+    try:
+        sale_id = int(sale_id_str)
+        if sale_id > 0:
+            return sale_id
+        else:
+            messagebox.showerror("Invalid Sale ID", "Sale ID must be a positive integer.")
+    except (ValueError, TypeError):
+        messagebox.showerror("Invalid Sale ID", "Invalid sale ID. Please enter a valid integer value.")
+
+def get_client_name(client_id):
+    for client in clients_data:
+        if client["client_id"] == client_id:
+            return client["name"]
+    return ""
+
+def get_product_name(product_id):
+    for product in products_data:
+        if product["product_id"] == product_id:
+            return product["name"]
+    return ""
+
+def get_sale_details(sale_id):
+    for sale in sales_data:
+        if sale["sale_id"] == sale_id:
+            return sale
+    return {}
+
+# Create the login window
+login_window = tk.Toplevel(window)
+login_window.title("Login")
+
+username_label = tk.Label(login_window, text="Username:")
+username_label.pack()
+username_entry = tk.Entry(login_window)
+username_entry.pack()
+
+password_label = tk.Label(login_window, text="Password:")
+password_label.pack()
+password_entry = tk.Entry(login_window, show="*")
+password_entry.pack()
+
+error_label = tk.Label(login_window, text="", fg="red")
+error_label.pack()
+
 login_button = tk.Button(login_window, text="Login", command=login)
 login_button.pack()
 
-error_label = tk.Label(login_window, fg="red")
-error_label.pack()
-
+# Create the main window
 window.withdraw()
 
-menubar = tk.Menu(window)
+# Create the menu bar
+menu_bar = tk.Menu(window)
+window.config(menu=menu_bar)
 
-main_menu = tk.Menu(menubar, tearoff=0)
-menubar.add_cascade(label="Main Menu", menu=main_menu)
-
-def show_work_in_progress():
-    output.delete(1.0, tk.END)
-    output.insert(tk.END, "WORK IN PROGRESS")
-
-main_menu.add_command(label="WORK IN PROGRESS", command=show_work_in_progress)
-
-clients_menu = tk.Menu(menubar, tearoff=0)
-menubar.add_cascade(label="Clients", menu=clients_menu)
-
-def list_clients():
-    output.delete(1.0, tk.END)
-    for client in clients_data:
-        output.insert(tk.END, f"Client ID: {client['client_id']}\nName: {client['name']}\nAddress: {client['address']}\n\n")
-
+# Create the Clients menu
+clients_menu = tk.Menu(menu_bar, tearoff=False)
+menu_bar.add_cascade(label="Clients", menu=clients_menu)
 clients_menu.add_command(label="List", command=list_clients)
-clients_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
+clients_menu.add_command(label="Add", command=add_client, state="disabled")
+clients_menu.add_command(label="Modify", command=modify_client, state="disabled")
+clients_menu.add_command(label="Delete", command=delete_client, state="disabled")
 
-employees_menu = tk.Menu(menubar, tearoff=0)
-menubar.add_cascade(label="Employees", menu=employees_menu)
-
-def list_employees():
-    output.delete(1.0, tk.END)
-    for employee in employees_data:
-        output.insert(tk.END, f"Employee ID: {employee['employee_id']}\nName: {employee['name']}\nPosition: {employee['position']}\n\n")
-
-employees_menu.add_command(label="List", command=list_employees)
-employees_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
-
-products_menu = tk.Menu(menubar, tearoff=0)
-menubar.add_cascade(label="Products", menu=products_menu)
-
-def list_products():
-    output.delete(1.0, tk.END)
-    for product in products_data:
-        output.insert(tk.END, f"Product ID: {product['product_id']}\nName: {product['name']}\nPrice: {product['price']}\n\n")
-
+# Create the Products menu
+products_menu = tk.Menu(menu_bar, tearoff=False)
+menu_bar.add_cascade(label="Products", menu=products_menu)
 products_menu.add_command(label="List", command=list_products)
-products_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
+products_menu.add_command(label="Add", command=add_product, state="disabled")
+products_menu.add_command(label="Modify", command=modify_product, state="disabled")
+products_menu.add_command(label="Delete", command=delete_product, state="disabled")
 
-orders_menu = tk.Menu(menubar, tearoff=0)
-menubar.add_cascade(label="Orders", menu=orders_menu)
+# Create the Sales menu
+sales_menu = tk.Menu(menu_bar, tearoff=False)
+menu_bar.add_cascade(label="Sales", menu=sales_menu)
+sales_menu.add_command(label="List", command=list_sales)
+sales_menu.add_command(label="Add", command=add_sale, state="disabled")
+sales_menu.add_command(label="Modify", command=modify_sale, state="disabled")
+sales_menu.add_command(label="Delete", command=delete_sale, state="disabled")
 
-def list_orders():
-    output.delete(1.0, tk.END)
-    for order in orders_data:
-        output.insert(tk.END, f"Order ID: {order['order_id']}\nProduct: {order['product']}\nQuantity: {order['quantity']}\n\n")
+# Create the Invoices menu
+invoices_menu = tk.Menu(menu_bar, tearoff=False)
+menu_bar.add_cascade(label="Invoices", menu=invoices_menu)
+invoices_menu.add_command(label="List", command=list_invoices)
+invoices_menu.add_command(label="Add", command=add_invoice, state="disabled")
+invoices_menu.add_command(label="Modify", command=modify_invoice, state="disabled")
+invoices_menu.add_command(label="Delete", command=delete_invoice, state="disabled")
 
-orders_menu.add_command(label="List", command=list_orders)
-orders_menu.add_command(label="Return to Main Menu",command=show_work_in_progress)
-
-suppliers_menu = tk.Menu(menubar, tearoff=0)
-menubar.add_cascade(label="Suppliers", menu=suppliers_menu)
-
-def list_suppliers():
-    output.delete(1.0, tk.END)
-    for supplier in suppliers_data:
-        output.insert(tk.END, f"Supplier ID: {supplier['supplier_id']}\nName: {supplier['name']}\nAddress: {supplier['address']}\n\n")
-
-suppliers_menu.add_command(label="List", command=list_suppliers)
-suppliers_menu.add_command(label="Return to Main Menu", command=show_work_in_progress)
-
-output = tk.Text(window)
-output.pack(fill=tk.BOTH, expand=True)
-
-window.config(menu=menubar)
+# Create the output treeview
+columns = ("#1", "#2", "#3", "#4", "#5", "#6")
+output = ttk.Treeview(window, columns=columns, show="headings")
+output.heading("#1", text="Type")
+output.heading("#2", text="ID")
+output.heading("#3", text="Name")
+output.heading("#4", text="Address")
+output.heading("#5", text="Quantity")
+output.heading("#6", text="Date")
+output.pack()
 
 window.mainloop()
+
